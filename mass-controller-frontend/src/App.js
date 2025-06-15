@@ -21,13 +21,17 @@ function App() {
       setIsLoading(false);
 
       // アイコンの位置を計算
-      const numIcons = count * 2; // ログ件数の倍の数
+      const numIcons = count * 2; // ログ件数と同じ数
       const positions = [];
+      const gridWidth = 5; // グリッドの幅
       for (let i = 0; i < numIcons; i++) {
+        const row = Math.floor(i / gridWidth);
+        const col = i % gridWidth;
+        const x = col * 100 + 50; // グリッドの間隔とオフセット
+        const y = row * 100 + 50;
         positions.push({
           x: Math.random() * window.innerWidth,
           y: Math.random() * window.innerHeight,
-          rotate: Math.random() * 360,
         });
       }
       setIconPositions(positions);
@@ -49,12 +53,13 @@ function App() {
       });
       if (response.ok) {
         setLog('今行くを記録しました');
-        fetchCongestion();
       } else {
         setLog(`記録に失敗しました: ${response.status}`);
       }
+      fetchCongestion();
     } catch (error) {
       console.error('Error sending go now data:', error);
+      console.error('Error details:', error.message, error.stack);
       setLog(error.toString());
     }
   };
@@ -74,17 +79,17 @@ function App() {
                 key={index}
                 src={humanIcon}
                 alt="human icon"
-                style={{
-                  position: 'absolute',
-                  left: position.x,
-                  top: position.y,
-                  transform: `rotate(${position.rotate}deg)`,
-                  width: '300px', // アイコンのサイズ
-                }}
-              />
-            ))}
-          </>
-        )}
+                  style={{
+                    position: 'absolute',
+                    left: position.x,
+                    top: position.y,
+                    transform: `rotate(${position.rotate}deg)`,
+                    width: '200px', // アイコンのサイズ
+                  }}
+                />
+              ))}
+            </>
+          )}
     </div>
   );
 }
