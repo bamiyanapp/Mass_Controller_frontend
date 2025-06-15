@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.55204806.css",
+    "main.js": "/static/js/main.0ac97ae3.js",
+    "static/js/453.cbf0fbfa.chunk.js": "/static/js/453.cbf0fbfa.chunk.js",
+    "static/media/syokudo.jpeg": "/static/media/syokudo.20697a7f7ad62285fd4c.jpeg",
+    "static/media/logo.svg": "/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/index.html",
+    "main.55204806.css.map": "/static/css/main.55204806.css.map",
+    "main.0ac97ae3.js.map": "/static/js/main.0ac97ae3.js.map",
+    "453.cbf0fbfa.chunk.js.map": "/static/js/453.cbf0fbfa.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.55204806.css",
+    "static/js/main.0ac97ae3.js"
+  ]
+}
