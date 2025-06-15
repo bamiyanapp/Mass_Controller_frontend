@@ -27,7 +27,6 @@ function App() {
         positions.push({
           x: Math.random() * window.innerWidth,
           y: Math.random() * window.innerHeight,
-          rotate: Math.random() * 360,
         });
       }
       setIconPositions(positions);
