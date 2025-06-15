@@ -6,12 +6,6 @@ import humanIcon from './img/human.png'; // アイコンのインポート
 function App() {
   const corsProxy = 'https://cors-anywhere.herokuapp.com/'; // CORSプロキシ
 
-  // APIリクエストを行う関数
-  const fetchWithCors = async (url, options) => {
-    const corsUrl = corsProxy + url;
-    const response = await fetch(corsUrl, options);
-    return response;
-  };
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [log, setLog] = useState('');
