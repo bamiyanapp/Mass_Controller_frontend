@@ -2,6 +2,7 @@
   "name": "mass-controller-frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://<YOUR_USERNAME>.github.io/<YOUR_REPOSITORY_NAME>",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -14,7 +15,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp build/index.html build/404.html",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
