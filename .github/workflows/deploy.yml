@@ -35,3 +35,6 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./build
           # cname: example.com  # 独自ドメインを使う場合はこちらを設定
+      - name: Show GitHub Pages URL
+        run: |
+          echo "Pages URL: ${{ steps.deployment.outputs.page_url }}"
