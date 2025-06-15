@@ -33,11 +33,13 @@ function App() {
         },
         body: JSON.stringify({ field: '食堂' }),
       });
+      const status = response.status;
+      const responseText = await response.text();
       if (response.ok) {
         setLog('今行くを記録しました');
         fetchCongestion(); // データを再取得
       } else {
-        setLog('記録に失敗しました');
+        setLog(`記録に失敗しました: ${status} - ${responseText}`);
       }
     } catch (error) {
       console.error('Error sending go now data:', error);
@@ -47,7 +49,6 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         {isLoading ? (
           <p>Loading...</p>
@@ -58,7 +59,6 @@ function App() {
             <p>Log: {log}</p>
           </>
         )}
-      </header>
     </div>
   );
 }

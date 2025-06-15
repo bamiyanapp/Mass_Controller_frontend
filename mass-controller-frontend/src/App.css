@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  background-image: url("./img/syokudo.jpeg");
+  background-size: contain;
+  background-position: center;
+  min-height: 100vh;
 }
 
 .App-logo {
