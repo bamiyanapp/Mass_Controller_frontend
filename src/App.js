@@ -4,8 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import humanIcon from './img/human.png'; // アイコンのインポート
 
 function App() {
-  const corsProxy = 'https://cors-anywhere.herokuapp.com/'; // CORSプロキシ
-
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [log, setLog] = useState('');
