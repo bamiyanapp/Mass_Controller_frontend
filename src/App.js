@@ -4,6 +4,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import humanIcon from './img/human.png'; // アイコンのインポート
 
 function App() {
+  const corsProxy = 'https://cors-anywhere.herokuapp.com/'; // CORSプロキシ
+
+  // APIリクエストを行う関数
+  const fetchWithCors = async (url, options) => {
+    const corsUrl = corsProxy + url;
+    const response = await fetch(corsUrl, options);
+    return response;
+  };
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [log, setLog] = useState('');
@@ -66,21 +74,21 @@ function App() {
         ) : (
           <>
             <p>混雑具合: {congestion}</p>
-            <button onClick={handleGoNow}>今行く</button>
+            <button onClick={handleGoNow} style={{ position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)' }}>今行く</button>
             <p>Log: {log}</p>
             {iconPositions.map((position, index) => (
               <img
                 key={index}
-                src={humanIcon}
-                alt="human icon"
-                style={{
-                  position: 'absolute',
-                  left: position.x,
-                  top: position.y,
-                  transform: `rotate(${position.rotate}deg)`,
-                  width: '300px', // アイコンのサイズ
-                }}
-              />
+                  src={humanIcon}
+                  alt="human icon"
+                  style={{
+                    position: 'absolute',
+                    left: position.x,
+                    top: position.y - 50,
+                    transform: `rotate(${position.rotate}deg)`,
+                    width: '300px', // アイコンのサイズ
+                  }}
+                />
             ))}
           </>
         )}
