@@ -47,13 +47,11 @@ function App() {
         },
         body: JSON.stringify({ field: '食堂' }),
       });
-      const status = response.status;
-      const responseText = await response.text();
       if (response.ok) {
         setLog('今行くを記録しました');
-        fetchCongestion(); // データを再取得
+        fetchCongestion();
       } else {
-        setLog(`記録に失敗しました: ${status} - ${responseText}`);
+        setLog(`記録に失敗しました: ${response.status}`);
       }
     } catch (error) {
       console.error('Error sending go now data:', error);
@@ -81,7 +79,7 @@ function App() {
                   left: position.x,
                   top: position.y,
                   transform: `rotate(${position.rotate}deg)`,
-                  width: '30px', // アイコンのサイズ
+                  width: '300px', // アイコンのサイズ
                 }}
               />
             ))}
