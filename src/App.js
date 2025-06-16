@@ -37,7 +37,7 @@ function App() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [API_ENDPOINT]);
 
   useEffect(() => {
     fetchCongestion();
