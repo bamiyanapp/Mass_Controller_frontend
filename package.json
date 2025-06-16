@@ -1,5 +1,6 @@
 {
   "name": "mass-controller-frontend",
+  "homepage":"https://bamiyanapp.github.io/Mass_Controller_frontend/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
