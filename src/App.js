@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Home from './Home';
 import Congestion from './Congestion';
+import './App.css';
 
 function App() {
   const [area, setArea] = useState(null);
