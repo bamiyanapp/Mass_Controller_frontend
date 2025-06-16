@@ -11,13 +11,11 @@ jobs:
       contents: write
       pages: write    
     runs-on: ubuntu-latest
-    env:
-      REACT_APP_API_ENDPOINT: ${{ secrets.REACT_APP_API_ENDPOINT }}
     steps:
       - name: Debug env
-        env:
-          REACT_APP_API_ENDPOINT: ${{ secrets.REACT_APP_API_ENDPOINT }}
         run: |
+          echo "REACT_APP_API_ENDPOINT=https://a3d9hwh065.execute-api.ap-northeast-1.amazonaws.com/dev" > .env
+          cat .env
           echo "API_ENDPOINT: $REACT_APP_API_ENDPOINT"
 
       - name: 🧭 Checkout repository
