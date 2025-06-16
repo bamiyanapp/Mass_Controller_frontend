@@ -15,6 +15,8 @@ jobs:
       REACT_APP_API_ENDPOINT: ${{ secrets.REACT_APP_API_ENDPOINT }}
     steps:
       - name: Debug env
+        env:
+          REACT_APP_API_ENDPOINT: ${{ secrets.REACT_APP_API_ENDPOINT }}
         run: |
           echo "API_ENDPOINT: $REACT_APP_API_ENDPOINT"
 
