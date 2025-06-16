@@ -11,7 +11,8 @@ jobs:
       contents: write
       pages: write    
     runs-on: ubuntu-latest
-
+    env:
+      REACT_APP_API_ENDPOINT: ${{ secrets.REACT_APP_API_ENDPOINT }}
     steps:
       - name: 🧭 Checkout repository
         uses: actions/checkout@v3
