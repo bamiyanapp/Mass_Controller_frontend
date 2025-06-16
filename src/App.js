@@ -12,14 +12,15 @@ function App() {
 
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
-    // モックデータを使用
-    setTimeout(() => {
-      const mockData = [{ field: '食堂' }, { field: '食堂' }, { field: '食堂' }]; // 例: 3件のデータ
-      const count = mockData.length;
+    try {
+      const response = await fetch(`${API_ENDPOINT}/items?minutes=60`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      const count = data.length;
       setCongestion(count.toString());
-      setLog(JSON.stringify(mockData));
-      setIsLoading(false);
-
+      setLog(JSON.stringify(data));
       // アイコンの位置を計算
       const numIcons = count * 2; // ログ件数の倍の数
       const positions = [];
@@ -30,7 +31,12 @@ function App() {
         });
       }
       setIconPositions(positions);
-    }, 1000);
+    } catch (error) {
+      console.error('Error fetching congestion data:', error);
+      setLog(error.toString());
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
