@@ -33,6 +33,11 @@
 
 ### `npm run eject`
 
+## デプロイ
+
+* このプロジェクトはGithub pagesによりホストされています
+* [リンク](https://bamiyanapp.github.io/Mass_Controller_frontend/)
+
 **注意: これは一方通行の操作です。`eject` すると、元に戻せません！**
 
 ビルドツールと構成の選択に満足できない場合は、いつでも `eject` できます。このコマンドは、プロジェクトから単一のビルド依存関係を削除します。
