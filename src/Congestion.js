@@ -66,6 +66,7 @@ function Congestion({ area, onBack }) {
               src={humanIcon}
               alt="icon"
               style={{ position: 'absolute', left: pos.x, top: pos.y - 50, width: 300 }}
+              className="human-icon-style"
             />
           ))}
         </>

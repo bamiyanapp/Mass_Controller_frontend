@@ -17,6 +17,12 @@
   border: none; /* 枠線をなくす */
   cursor: pointer; /* カーソルをポインタにする */
 }
+
+.human-icon-style {
+  opacity: 0.7; /* 透過度を設定 */
+  pointer-events: none; /* 下の要素をクリック可能にする */
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
