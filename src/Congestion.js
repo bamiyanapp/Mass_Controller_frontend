@@ -51,14 +51,14 @@ function Congestion({ area, onBack }) {
     }
   };
 
-  return (
+    return (
     <div>
-      <button onClick={onBack}>← 戻る</button>
+      <button className="button-style" onClick={onBack}>← 戻る</button>
       <h1>{area} の混雑状況</h1>
       {isLoading ? <p>読み込み中...</p> : (
         <>
           <p>混雑具合: {congestion}</p>
-          <button onClick={handleGoNow}>今行く</button>
+          <button className="button-style" onClick={handleGoNow}>今行く</button>
           <p>Log: {log}</p>
           {iconPositions.map((pos, i) => (
             <img

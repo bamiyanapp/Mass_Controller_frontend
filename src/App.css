@@ -7,6 +7,16 @@
   min-height: 100vh;
 }
 
+.button-style {
+  font-size: 20px; /* 文字サイズを大きくする */
+  padding: 10px 20px; /* パディングで余白を調整する */
+  margin: 10px; /* マージンでボタンの間隔を調整する */
+  border-radius: 5px; /* 角を丸くする */
+  background-color: #4CAF50; /* 背景色 */
+  color: white; /* 文字色 */
+  border: none; /* 枠線をなくす */
+  cursor: pointer; /* カーソルをポインタにする */
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
