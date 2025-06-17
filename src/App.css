@@ -23,6 +23,15 @@
   pointer-events: none; /* 下の要素をクリック可能にする */
 }
 
+@keyframes moveRightToLeft {
+  from {
+    transform: translateX(100vw); /* 画面外から */
+  }
+  to {
+    transform: translateX(-100vw); /* 画面外へ */
+  }
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
