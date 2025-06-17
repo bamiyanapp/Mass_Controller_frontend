@@ -30,6 +30,7 @@ function Congestion({ area, onBack }) {
       setCongestion(count.toString());
       setLog(JSON.stringify(data));
 
+
       const now = new Date(); // ← 現在時刻を取得
 
       const positions = data.map(item => {
@@ -43,11 +44,12 @@ function Congestion({ area, onBack }) {
         else if (minutesAgo > 15) opacity = 0.75;
 
         return {
-          x: Math.random() * window.innerWidth,
+          x: Math.random() * window.innerWidth+window.innerWidth,
           y: Math.random() * window.innerHeight,
           opacity: opacity, // ← 透過度を追加
         };
       });
+
       setIconPositions(positions);
     } catch (error) {
       console.error(error);
@@ -109,7 +111,7 @@ function Congestion({ area, onBack }) {
                 top: pos.y - 50,
                 width: 300,
                 opacity: pos.opacity,
-                animation: `moveRightToLeft ${Math.random() * 5 + 2}s linear infinite`,
+                animation: `moveRightToLeft ${Math.random() * 5 + 4}s linear infinite`,
                 animationDelay: `${Math.random() * 5}s`,
               }}
               className="human-icon-style"
