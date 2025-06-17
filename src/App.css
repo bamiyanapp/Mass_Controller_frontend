@@ -25,10 +25,10 @@
 
 @keyframes moveRightToLeft {
   from {
-    transform: translateX(100vw); /* 画面外から */
+    transform: translateX(0vw); /* 画面外から */
   }
   to {
-    transform: translateX(-100vw); /* 画面外へ */
+    transform: translateX(-250vw); /* 画面外へ */
   }
 }
 

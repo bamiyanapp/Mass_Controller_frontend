@@ -18,7 +18,7 @@ function Congestion({ area, onBack }) {
       setCongestion(count.toString());
       setLog(JSON.stringify(data));
       const positions = Array.from({ length: count * 2 }, () => ({
-        x: Math.random() * window.innerWidth,
+        x: Math.random() * window.innerWidth+window.innerWidth,
         y: Math.random() * window.innerHeight,
       }));
       setIconPositions(positions);
@@ -65,7 +65,7 @@ function Congestion({ area, onBack }) {
               key={i}
               src={humanIcon}
               alt="icon"
-              style={{ position: 'absolute', left: pos.x, top: pos.y - 50, width: 300, animation: `moveRightToLeft ${Math.random() * 5 + 2}s linear infinite`, animationDelay: `${Math.random() * 5}s` }}
+              style={{ position: 'absolute', left: pos.x, top: pos.y - 50, width: 300, animation: `moveRightToLeft ${Math.random() * 5 + 4}s linear infinite`, animationDelay: `${Math.random() * 5}s` }}
               className="human-icon-style"
             />
           ))}
