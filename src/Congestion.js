@@ -5,7 +5,7 @@ import syokudoImg from './img/syokudo.jpeg';
 import daiyokujoImg from './img/daiyokujo.jpeg';
 import communitySpaceImg from './img/communitySpace.jpeg';
 
-function Congestion({ area, onBack }) {
+function Congestion({ displayAreaName, onBack }) {
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [log, setLog] = useState('');
@@ -19,13 +19,13 @@ function Congestion({ area, onBack }) {
     '大浴場': daiyokujoImg,
     'コミュニティスペース': communitySpaceImg
   };
-  const backgroundImage = backgroundImages[area] || syokudoImg;
+  const backgroundImage = backgroundImages[displayAreaName] || syokudoImg;
 
   // 混雑状況の取得
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(area)}`);
+      const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(displayAreaName)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
       const count = data.length;
@@ -56,7 +56,7 @@ function Congestion({ area, onBack }) {
     } finally {
       setIsLoading(false);
     }
-  }, [API_ENDPOINT, area]);
+  }, [API_ENDPOINT, displayAreaName]);
 
   // 初回読み込みとWebSocket設定
   useEffect(() => {
@@ -90,7 +90,7 @@ function Congestion({ area, onBack }) {
       const response = await fetch(`${API_ENDPOINT}/items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ field: area }),
+        body: JSON.stringify({ field: displayAreaName }),
       });
       if (response.ok) {
         setLog('記録完了');
@@ -116,7 +116,7 @@ function Congestion({ area, onBack }) {
       }}
     >
       <button className="button-style" onClick={onBack}>← 戻る</button>
-      <h1>{area} の混雑状況</h1>
+      <h1>{displayAreaName} の混雑状況</h1>
       {isLoading ? <p>読み込み中...</p> : (
         <>
           <p>混雑具合: {congestion}</p>
