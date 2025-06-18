@@ -11,15 +11,17 @@ function Congestion({ area, onBack }) {
   const [log, setLog] = useState('');
   const [iconPositions, setIconPositions] = useState([]);
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+  const WS_ENDPOINT = process.env.REACT_APP_WS_ENDPOINT;
 
-  // area に応じた背景画像を選択
+  // 背景画像の選択
   const backgroundImages = {
     '食堂': syokudoImg,
     '大浴場': daiyokujoImg,
     'コミュニティスペース': communitySpaceImg
   };
-  const backgroundImage = backgroundImages[area] || syokudoImg; // デフォルト背景
+  const backgroundImage = backgroundImages[area] || syokudoImg;
 
+  // 混雑状況の取得
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -30,13 +32,12 @@ function Congestion({ area, onBack }) {
       setCongestion(count.toString());
       setLog(JSON.stringify(data));
 
-      const now = new Date(); // ← 現在時刻を取得
+      const now = new Date();
 
       const positions = data.map(item => {
-        const itemTime = new Date(item.time); // ← item.time を Date に変換
-        const minutesAgo = (now - itemTime) / (1000 * 60); // ← 経過時間（分）
+        const itemTime = new Date(item.time);
+        const minutesAgo = (now - itemTime) / (1000 * 60);
 
-        // ← 経過時間に応じて opacity を決定
         let opacity = 1;
         if (minutesAgo > 45) opacity = 0.25;
         else if (minutesAgo > 30) opacity = 0.5;
@@ -45,7 +46,7 @@ function Congestion({ area, onBack }) {
         return {
           x: Math.random() * window.innerWidth,
           y: Math.random() * window.innerHeight,
-          opacity: opacity, // ← 透過度を追加
+          opacity,
         };
       });
       setIconPositions(positions);
@@ -57,10 +58,33 @@ function Congestion({ area, onBack }) {
     }
   }, [API_ENDPOINT, area]);
 
+  // 初回読み込みとWebSocket設定
   useEffect(() => {
     fetchCongestion();
-  }, [fetchCongestion]);
 
+    const ws = new WebSocket(WS_ENDPOINT);
+
+    ws.onopen = () => {
+      console.log('WebSocket接続成功');
+    };
+
+    ws.onmessage = (event) => {
+      console.log('WebSocket受信:', event.data);
+      fetchCongestion(); // 自動更新
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket切断');
+    };
+
+    ws.onerror = (err) => {
+      console.error('WebSocketエラー:', err);
+    };
+
+    return () => ws.close(); // クリーンアップ
+  }, [fetchCongestion, WS_ENDPOINT]);
+
+  // 「今行く」ボタンの処理
   const handleGoNow = async () => {
     try {
       const response = await fetch(`${API_ENDPOINT}/items`, {
@@ -120,5 +144,6 @@ function Congestion({ area, onBack }) {
     </div>
   );
 }
+
 
 export default Congestion;
