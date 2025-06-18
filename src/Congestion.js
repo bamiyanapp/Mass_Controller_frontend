@@ -1,16 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import humanIcon from './img/human.png';
 
 import syokudoImg from './img/syokudo.jpeg';
 import daiyokujoImg from './img/daiyokujo.jpeg';
 import communitySpaceImg from './img/communitySpace.jpeg';
 
-function Congestion({ area, onBack }) {
+function Congestion() {
+  const { areaName } = useParams();
+  const navigate = useNavigate();
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [log, setLog] = useState('');
   const [iconPositions, setIconPositions] = useState([]);
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+
+  const areaMap = {
+    'syokudo': '食堂',
+    'daiyokujo': '大浴場',
+    'communitySpace': 'コミュニティスペース'
+  };
+  const displayAreaName = areaMap[areaName] || areaName; // Fallback to original name if not mapped
 
   // area に応じた背景画像を選択
   const backgroundImages = {
@@ -18,18 +28,17 @@ function Congestion({ area, onBack }) {
     '大浴場': daiyokujoImg,
     'コミュニティスペース': communitySpaceImg
   };
-  const backgroundImage = backgroundImages[area] || syokudoImg; // デフォルト背景
+  const backgroundImage = backgroundImages[displayAreaName] || syokudoImg; // デフォルト背景
 
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(area)}`);
+      const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(displayAreaName)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
       const count = data.length;
       setCongestion(count.toString());
       setLog(JSON.stringify(data));
-
 
       const now = new Date(); // ← 現在時刻を取得
 
@@ -44,7 +53,7 @@ function Congestion({ area, onBack }) {
         else if (minutesAgo > 15) opacity = 0.75;
 
         return {
-          x: Math.random() * window.innerWidth+window.innerWidth,
+          x: Math.random() * window.innerWidth, // Adjusted to be within window width
           y: Math.random() * window.innerHeight,
           opacity: opacity, // ← 透過度を追加
         };
@@ -57,7 +66,7 @@ function Congestion({ area, onBack }) {
     } finally {
       setIsLoading(false);
     }
-  }, [API_ENDPOINT, area]);
+  }, [API_ENDPOINT, displayAreaName]);
 
   useEffect(() => {
     fetchCongestion();
@@ -68,7 +77,7 @@ function Congestion({ area, onBack }) {
       const response = await fetch(`${API_ENDPOINT}/items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ field: area }),
+        body: JSON.stringify({ field: displayAreaName }),
       });
       if (response.ok) {
         setLog('記録完了');
@@ -93,8 +102,8 @@ function Congestion({ area, onBack }) {
         textAlign: 'center',
       }}
     >
-      <button className="button-style" onClick={onBack}>← 戻る</button>
-      <h1>{area} の混雑状況</h1>
+      <button className="button-style" onClick={() => navigate('/')}>← 戻る</button>
+      <h1>{displayAreaName} の混雑状況</h1>
       {isLoading ? <p>読み込み中...</p> : (
         <>
           <p>混雑具合: {congestion}</p>
