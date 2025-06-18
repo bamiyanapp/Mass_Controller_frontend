@@ -70,3 +70,20 @@
     transform: rotate(360deg);
   }
 }
+
+.chart-container {
+  background-color: rgba(255, 255, 255, 0.9); /* 白背景 + 少し透過 */
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 50px;
+  width: 90%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chart-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
