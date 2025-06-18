@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import humanIcon from './img/human.png';
 
 import syokudoImg from './img/syokudo.jpeg';
 import daiyokujoImg from './img/daiyokujo.jpeg';
 import communitySpaceImg from './img/communitySpace.jpeg';
 
-function Congestion() {
-  const { areaName } = useParams();
-  const navigate = useNavigate();
+function Congestion({ area, onBack }) {
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [log, setLog] = useState('');
@@ -22,14 +19,13 @@ function Congestion() {
     '大浴場': daiyokujoImg,
     'コミュニティスペース': communitySpaceImg
   };
-
   const backgroundImage = backgroundImages[area] || syokudoImg;
 
   // 混雑状況の取得
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(displayAreaName)}`);
+      const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(area)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
       const count = data.length;
@@ -48,12 +44,11 @@ function Congestion() {
         else if (minutesAgo > 15) opacity = 0.75;
 
         return {
-          x: Math.random() * window.innerWidth, // Adjusted to be within window width
+          x: Math.random() * window.innerWidth,
           y: Math.random() * window.innerHeight,
           opacity,
         };
       });
-
       setIconPositions(positions);
     } catch (error) {
       console.error(error);
@@ -61,7 +56,7 @@ function Congestion() {
     } finally {
       setIsLoading(false);
     }
-  }, [API_ENDPOINT, displayAreaName]);
+  }, [API_ENDPOINT, area]);
 
   // 初回読み込みとWebSocket設定
   useEffect(() => {
@@ -95,7 +90,7 @@ function Congestion() {
       const response = await fetch(`${API_ENDPOINT}/items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ field: displayAreaName }),
+        body: JSON.stringify({ field: area }),
       });
       if (response.ok) {
         setLog('記録完了');
@@ -120,8 +115,8 @@ function Congestion() {
         textAlign: 'center',
       }}
     >
-      <button className="button-style" onClick={() => navigate('/')}>← 戻る</button>
-      <h1>{displayAreaName} の混雑状況</h1>
+      <button className="button-style" onClick={onBack}>← 戻る</button>
+      <h1>{area} の混雑状況</h1>
       {isLoading ? <p>読み込み中...</p> : (
         <>
           <p>混雑具合: {congestion}</p>
@@ -138,7 +133,7 @@ function Congestion() {
                 top: pos.y - 50,
                 width: 300,
                 opacity: pos.opacity,
-                animation: `moveRightToLeft ${Math.random() * 5 + 4}s linear infinite`,
+                animation: `moveRightToLeft ${Math.random() * 5 + 2}s linear infinite`,
                 animationDelay: `${Math.random() * 5}s`,
               }}
               className="human-icon-style"
