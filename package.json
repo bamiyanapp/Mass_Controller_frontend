@@ -1,6 +1,6 @@
 {
   "name": "mass-controller-frontend",
-  "homepage":"https://bamiyanapp.github.io/Mass_Controller_frontend/",
+  "homepage": "https://bamiyanapp.github.io/Mass_Controller_frontend/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router-dom": "^6.30.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
