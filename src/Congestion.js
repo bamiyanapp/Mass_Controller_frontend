@@ -2,15 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import humanIcon from './img/human.png';
 
-import syokudoImg from './img/syokudo.jpeg';
-import daiyokujoImg from './img/daiyokujo.jpeg';
+import syokudoImg from './img/syokudo.jpg';
+import daiyokujoImg from './img/daiyokujo.jpg';
 import communitySpaceImg from './img/communitySpace.jpeg';
 
 function Congestion() {
-  const { area } = useParams(); // ← これでURLからareaを取得
+  const { area } = useParams();
   const navigate = useNavigate();
 
-  // エリア名を日本語にマッピング
   const areaMapReverse = {
     syokudo: '食堂',
     daiyokujo: '大浴場',
@@ -105,17 +104,22 @@ function Congestion() {
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        minHeight: '100vh',
+        height: '100vh',
+        width: '100vw',
         textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <button className="button-style" onClick={() => navigate(-1)}>← 戻る</button>
+      <div className="button-group">
+        <button className="button-style" onClick={() => navigate(-1)}>← 戻る</button>
+        <button className="button-style" onClick={handleGoNow}>今行く</button>
+      </div>
+
       <h1>{displayAreaName} の混雑状況</h1>
       {isLoading ? <p>読み込み中...</p> : (
         <>
           <p>混雑具合: {congestion}</p>
-          <button className="button-style" onClick={handleGoNow}>今行く</button>
-          <p>Log: {log}</p>
           {iconPositions.map((pos, i) => (
             <img
               key={i}
