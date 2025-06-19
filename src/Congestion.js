@@ -113,7 +113,7 @@ function Congestion() {
     } finally {
       setIsLoading(false);
     }
-  }, [API_ENDPOINT, displayAreaName, area]);
+  }, [API_ENDPOINT, displayAreaName]);
 
   useEffect(() => {
     fetchCongestion();
