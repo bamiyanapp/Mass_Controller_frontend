@@ -35,8 +35,6 @@ function Congestion() {
   const WS_ENDPOINT = process.env.REACT_APP_WS_ENDPOINT;
 
 
-  const backgroundImage = backgroundImages[displayAreaName] || syokudoImg;
-
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -176,7 +174,6 @@ function Congestion() {
         <>
           <p>混雑具合: {congestion}</p>
           <button className="button-style" onClick={handleGoNow}>今行く</button>
-          <p>Log: {log}</p>
 
           {/* /棒グラフ作成追加 */}
               {chartData.length > 0 && (
