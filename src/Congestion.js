@@ -19,7 +19,6 @@ function Congestion() {
 
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [log, setLog] = useState('');
   const [iconPositions, setIconPositions] = useState([]);
 
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
@@ -38,8 +37,10 @@ function Congestion() {
       const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(displayAreaName)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
+
+      console.log('取得データ:', data); // ← logの代わりに出力
+
       setCongestion(data.length.toString());
-      setLog(JSON.stringify(data));
 
       const now = new Date();
       const positions = data.map((item) => {
@@ -59,8 +60,7 @@ function Congestion() {
       });
       setIconPositions(positions);
     } catch (error) {
-      console.error(error);
-      setLog(error.toString());
+      console.error('データ取得エラー:', error);
     } finally {
       setIsLoading(false);
     }
@@ -86,14 +86,13 @@ function Congestion() {
         body: JSON.stringify({ field: displayAreaName }),
       });
       if (response.ok) {
-        setLog('記録完了');
+        console.log('記録完了');
         fetchCongestion();
       } else {
-        setLog(`失敗: ${response.status}`);
+        console.error(`記録失敗: ${response.status}`);
       }
     } catch (error) {
-      console.error(error);
-      setLog(error.toString());
+      console.error('送信エラー:', error);
     }
   };
 
