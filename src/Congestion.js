@@ -48,7 +48,7 @@ function Congestion() {
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_ENDPOINT}/items?minutes=1&field=${encodeURIComponent(displayAreaName)}`);
+      const response = await fetch(`${API_ENDPOINT}/items?minutes=3&field=${encodeURIComponent(displayAreaName)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
 
@@ -88,44 +88,41 @@ function Congestion() {
       });
       setIconPositions(positions);
 
-    // 15分ごとの集計データを生成
-   // 今後30分間のスロット（5分おき）ごとに、何人がその時間にまだ残っているかを計
-   
-const predictedPast = new Array(6).fill(0); // 過去30分の5分ごとの押下数
-const predictedFuture = new Array(6).fill(0); // 今後30分間に滞在している人数
-
-data.forEach(item => {
-  const itemTime = new Date(item.time);
-  const minutesSince = (now - itemTime) / (1000 * 60);
-
-  if (minutesSince >= 0 && minutesSince <= 1.5) {
-    const index = Math.floor(minutesSince / 0.25); // どの過去スロットか
-    predictedPast[index]++;
-  }
-});
-
-// 過去データを元に、各未来スロットの人数を累積加算
-for (let i = 0; i < predictedFuture.length; i++) {
-  for (let j = i; j < predictedPast.length; j++) {
-    predictedFuture[i] += predictedPast[j];
-  }
-}
+      // 15分ごとの集計データを生成
+      // 今後30分間のスロット（5分おき）ごとに、何人がその時間にまだ残っているかを計
+      const DURATION_MINUTES = 1;
+      const SLOT_MINUTES = 0.25;
+      const SLOT_COUNT = 6;
 
 
+      const predictedFuture = new Array(SLOT_COUNT).fill(0);
 
+      data.forEach(item => {
+        const itemTime = new Date(item.time);
+        const leaveTime = new Date(itemTime.getTime() + DURATION_MINUTES * 60000);
 
-const futureData = predictedFuture.map((count, index) => {
-  const start = (index + 1) * 0.25;
-  return {
-    name: `${start}分後`,
-    実績: 0,
-    予測: count,
-  };
-});
+        for (let i = 0; i < SLOT_COUNT; i++) {
+          const slotStart = new Date(now.getTime() + i * SLOT_MINUTES * 60000);
+          const slotEnd = new Date(slotStart.getTime() + SLOT_MINUTES * 60000);
+          console.log({ i, inSlot: itemTime < slotEnd && leaveTime > slotStart, itemTime, leaveTime, slotStart, slotEnd });
 
-setChartData([...futureData.reverse()]);
+          // スロット内にこの人が滞在していればカウント
+          if (itemTime < slotEnd && leaveTime > slotStart) {
+            predictedFuture[i]++;
+          }
+        }
+      });
 
+      const futureData = predictedFuture.map((count, index) => {
+        const start = (index + 1) * 0.25;
+        return {
+          name: `${start}分後`,
+          実績: 0,
+          予測: count,
+        };
+      });
 
+      setChartData([...futureData.reverse()]);
 
     } catch (error) {
       console.error('データ取得エラー:', error);
