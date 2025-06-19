@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Mass_Controller_frontend/static/css/main.a95307fa.css",
-    "main.js": "/Mass_Controller_frontend/static/js/main.99500d18.js",
+    "main.js": "/Mass_Controller_frontend/static/js/main.d88566b1.js",
     "static/js/453.46ac027c.chunk.js": "/Mass_Controller_frontend/static/js/453.46ac027c.chunk.js",
     "static/media/syokudo.jpg": "/Mass_Controller_frontend/static/media/syokudo.ea0a0450a16e553551a9.jpg",
     "static/media/daiyokujo.jpg": "/Mass_Controller_frontend/static/media/daiyokujo.e156292537984ebea6bf.jpg",
@@ -15,11 +15,11 @@
     "static/media/human2.png": "/Mass_Controller_frontend/static/media/human2.b932c90db0bd519d0f0a.png",
     "index.html": "/Mass_Controller_frontend/index.html",
     "main.a95307fa.css.map": "/Mass_Controller_frontend/static/css/main.a95307fa.css.map",
-    "main.99500d18.js.map": "/Mass_Controller_frontend/static/js/main.99500d18.js.map",
+    "main.d88566b1.js.map": "/Mass_Controller_frontend/static/js/main.d88566b1.js.map",
     "453.46ac027c.chunk.js.map": "/Mass_Controller_frontend/static/js/453.46ac027c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a95307fa.css",
-    "static/js/main.99500d18.js"
+    "static/js/main.d88566b1.js"
   ]
 }
