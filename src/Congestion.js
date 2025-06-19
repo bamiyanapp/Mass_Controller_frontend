@@ -66,25 +66,29 @@ function Congestion() {
 
     // 15分ごとの集計データを生成
    // 今後30分間のスロット（5分おき）ごとに、何人がその時間にまだ残っているかを計算
-const predictedFuture = new Array(6).fill(0); // 0–30分を5分刻みで6区間
+   const predictedPast = new Array(6).fill(0); // 0–30分を5分刻みで6区間
+   const predictedFuture = new Array(6).fill(0); // 0–30分を5分刻みで6区間
+   
+const predictedPast = new Array(6).fill(0); // 過去30分の5分ごとの押下数
+const predictedFuture = new Array(6).fill(0); // 今後30分間に滞在している人数
 
 data.forEach(item => {
   const itemTime = new Date(item.time);
   const minutesSince = (now - itemTime) / (1000 * 60);
 
-  for (let i = 0; i < predictedFuture.length; i++) {
-    const slotStart = i * 5;
-    const slotEnd = slotStart + 5;
-
-    // この時間帯にまだ滞在中か？
-    if (minutesSince >= 0 && minutesSince <= 30) {
-      const futureTime = minutesSince + slotStart;
-      if (futureTime <= 30) {
-        predictedFuture[i]++;
-      }
-    }
+  if (minutesSince >= 0 && minutesSince <= 30) {
+    const index = Math.floor(minutesSince / 5); // どの過去スロットか
+    predictedPast[index]++;
   }
 });
+
+// 過去データを元に、各未来スロットの人数を累積加算
+for (let i = 0; i < predictedFuture.length; i++) {
+  for (let j = i; j < predictedPast.length; j++) {
+    predictedFuture[i] += predictedPast[j];
+  }
+}
+
 
 
 
