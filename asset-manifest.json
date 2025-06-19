@@ -1,17 +1,25 @@
 {
   "files": {
-    "main.css": "/Mass_Controller_frontend/static/css/main.517fec52.css",
-    "main.js": "/Mass_Controller_frontend/static/js/main.247ddc42.js",
-    "static/js/453.cbf0fbfa.chunk.js": "/Mass_Controller_frontend/static/js/453.cbf0fbfa.chunk.js",
+    "main.css": "/Mass_Controller_frontend/static/css/main.a95307fa.css",
+    "main.js": "/Mass_Controller_frontend/static/js/main.ef45652a.js",
+    "static/js/453.46ac027c.chunk.js": "/Mass_Controller_frontend/static/js/453.46ac027c.chunk.js",
     "static/media/syokudo.jpg": "/Mass_Controller_frontend/static/media/syokudo.ea0a0450a16e553551a9.jpg",
     "static/media/daiyokujo.jpg": "/Mass_Controller_frontend/static/media/daiyokujo.e156292537984ebea6bf.jpg",
+    "static/media/communitySpace.jpg": "/Mass_Controller_frontend/static/media/communitySpace.58cb90c1dc5211328f21.jpg",
+    "static/media/human6.png": "/Mass_Controller_frontend/static/media/human6.9a317ac4c0f090a5cabd.png",
+    "static/media/human3.png": "/Mass_Controller_frontend/static/media/human3.88a09e7d338df0aa2070.png",
+    "static/media/human4.png": "/Mass_Controller_frontend/static/media/human4.9bb6ed1f61159addb1c5.png",
+    "static/media/human1.png": "/Mass_Controller_frontend/static/media/human1.c3894e914c2270d0afd9.png",
+    "static/media/human7.png": "/Mass_Controller_frontend/static/media/human7.464b8b42667ade877c1b.png",
+    "static/media/human5.png": "/Mass_Controller_frontend/static/media/human5.9a8b77a0436832241188.png",
+    "static/media/human2.png": "/Mass_Controller_frontend/static/media/human2.b932c90db0bd519d0f0a.png",
     "index.html": "/Mass_Controller_frontend/index.html",
-    "main.517fec52.css.map": "/Mass_Controller_frontend/static/css/main.517fec52.css.map",
-    "main.247ddc42.js.map": "/Mass_Controller_frontend/static/js/main.247ddc42.js.map",
-    "453.cbf0fbfa.chunk.js.map": "/Mass_Controller_frontend/static/js/453.cbf0fbfa.chunk.js.map"
+    "main.a95307fa.css.map": "/Mass_Controller_frontend/static/css/main.a95307fa.css.map",
+    "main.ef45652a.js.map": "/Mass_Controller_frontend/static/js/main.ef45652a.js.map",
+    "453.46ac027c.chunk.js.map": "/Mass_Controller_frontend/static/js/453.46ac027c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.517fec52.css",
-    "static/js/main.247ddc42.js"
+    "static/css/main.a95307fa.css",
+    "static/js/main.ef45652a.js"
   ]
 }
