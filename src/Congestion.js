@@ -153,16 +153,16 @@ function Congestion() {
   return (
     <div
       className="App"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '100vh',
-        width: '100vw',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      // style={{
+      //   backgroundImage: `url(${backgroundImage})`,
+      //   backgroundSize: 'cover',
+      //   backgroundPosition: 'center',
+      //   height: '100vh',
+      //   width: '100vw',
+      //   textAlign: 'center',
+      //   position: 'relative',
+      //   overflow: 'hidden',
+      // }}
     >
       <div className="button-group">
         <button className="button-style" onClick={() => navigate(-1)}>← 戻る</button>
