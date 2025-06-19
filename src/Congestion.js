@@ -6,6 +6,13 @@ import syokudoImg from './img/syokudo.jpg';
 import daiyokujoImg from './img/daiyokujo.jpg';
 import communitySpaceImg from './img/communitySpace.jpeg';
 
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
+} from 'recharts';
+
+
+
+
 function Congestion() {
   const { area } = useParams();
   const navigate = useNavigate();
@@ -21,15 +28,12 @@ function Congestion() {
   const [isLoading, setIsLoading] = useState(false);
   const [iconPositions, setIconPositions] = useState([]);
 
+  const [chartData, setChartData] = useState([]);
+
+
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
   const WS_ENDPOINT = process.env.REACT_APP_WS_ENDPOINT;
 
-  const backgroundImages = {
-    '食堂': syokudoImg,
-    '大浴場': daiyokujoImg,
-    'コミュニティスペース': communitySpaceImg,
-  };
-  const backgroundImage = backgroundImages[displayAreaName] || syokudoImg;
 
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
@@ -59,6 +63,56 @@ function Congestion() {
         };
       });
       setIconPositions(positions);
+
+    // 15分ごとの集計データを生成
+    const countsPer5Min = new Array(12).fill(0); // 0–60分を5分ごとに12区間
+
+    data.forEach(item => {
+      const itemTime = new Date(item.time);
+      const minutesAgo = (now - itemTime) / (1000 * 60);
+
+      if (minutesAgo >= 0 && minutesAgo <= 60) {
+        const index = Math.floor(minutesAgo / 5);
+        countsPer5Min[index]++;
+      }
+    });
+
+
+    // 直近5分間の"今行く"データ取得
+      const goNowResponse = await fetch(`${API_ENDPOINT}/items?minutes=5&field=${encodeURIComponent(area)}`);
+      const goNowRaw = await goNowResponse.json();
+      const goNow = data.filter(item => {
+        const itemTime = new Date(item.time);
+        const minutesAgo = (now - itemTime) / (1000 * 60);
+        return minutesAgo <= 1;
+      });
+      
+      console.log('goNowRaw:', goNowRaw);
+      console.log('filtered goNow:', goNow);
+
+
+      const goNowCount = goNow.length;
+      const predicted5 = Math.round(goNowCount * 1.0);
+      const predicted15 = Math.round(goNowCount * 0.6);
+
+      const baseChartData = countsPer5Min.map((count, index) => {
+        const start = index * 5;
+        const end = start + 5;
+        return {
+          name: `~${end}分前`,
+          実績: count,
+          予測: 0
+        };
+      });
+
+      baseChartData.unshift(
+          { name: '5分後予測', 実績: 0, 予測: predicted5 },
+          { name: '15分後予測', 実績: 0, 予測: predicted15 }
+        );
+      
+      setChartData(baseChartData);
+
+
     } catch (error) {
       console.error('データ取得エラー:', error);
     } finally {
@@ -99,16 +153,16 @@ function Congestion() {
   return (
     <div
       className="App"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '100vh',
-        width: '100vw',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      // style={{
+      //   backgroundImage: `url(${backgroundImage})`,
+      //   backgroundSize: 'cover',
+      //   backgroundPosition: 'center',
+      //   height: '100vh',
+      //   width: '100vw',
+      //   textAlign: 'center',
+      //   position: 'relative',
+      //   overflow: 'hidden',
+      // }}
     >
       <div className="button-group">
         <button className="button-style" onClick={() => navigate(-1)}>← 戻る</button>
@@ -119,6 +173,26 @@ function Congestion() {
       {isLoading ? <p>読み込み中...</p> : (
         <>
           <p>混雑具合: {congestion}</p>
+          <button className="button-style" onClick={handleGoNow}>今行く</button>
+
+          {/* /棒グラフ作成追加 */}
+              {chartData.length > 0 && (
+      <div className="chart-container">
+        <h2 className="chart-title">過去60分の混雑推移＋ 未来予測</h2>
+        <ResponsiveContainer width="95%" height={300}>
+          <BarChart data={chartData}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="実績" fill="#8884d8" />
+            <Bar dataKey="予測" fill="#82ca9d" />
+            
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    )}
+
+
           {iconPositions.map((pos, i) => (
             <img
               key={i}
