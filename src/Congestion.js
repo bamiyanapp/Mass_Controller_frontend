@@ -98,8 +98,8 @@ data.forEach(item => {
   const itemTime = new Date(item.time);
   const minutesSince = (now - itemTime) / (1000 * 60);
 
-  if (minutesSince >= 0 && minutesSince <= 30) {
-    const index = Math.floor(minutesSince / 5); // どの過去スロットか
+  if (minutesSince >= 0 && minutesSince <= 1.5) {
+    const index = Math.floor(minutesSince / 0.25); // どの過去スロットか
     predictedPast[index]++;
   }
 });
@@ -115,9 +115,9 @@ for (let i = 0; i < predictedFuture.length; i++) {
 
 
 const futureData = predictedFuture.map((count, index) => {
-  const start = (index + 1) * 5;
+  const start = (index + 1) * 0.25;
   return {
-    name: `${start}分後予測`,
+    name: `${start}分後`,
     実績: 0,
     予測: count,
   };
