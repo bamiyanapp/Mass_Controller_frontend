@@ -88,42 +88,45 @@ function Congestion() {
       });
       setIconPositions(positions);
 
-      const countsPer5Min = new Array(12).fill(0);
-      data.forEach(item => {
-        const itemTime = new Date(item.time);
-        const minutesAgo = (now - itemTime) / (1000 * 60);
-        if (minutesAgo >= 0 && minutesAgo <= 60) {
-          const index = Math.floor(minutesAgo / 5);
-          countsPer5Min[index]++;
-        }
-      });
+    // 15分ごとの集計データを生成
+   // 今後30分間のスロット（5分おき）ごとに、何人がその時間にまだ残っているかを計
+   
+const predictedPast = new Array(6).fill(0); // 過去30分の5分ごとの押下数
+const predictedFuture = new Array(6).fill(0); // 今後30分間に滞在している人数
 
-  
-      
-      const goNow = data.filter(item => {
-        const itemTime = new Date(item.time);
-        const minutesAgo = (now - itemTime) / (1000 * 60);
-        return minutesAgo <= 1;
-      });
-      const goNowCount = goNow.length;
-      const predicted5 = Math.round(goNowCount * 1.0);
-      const predicted15 = Math.round(goNowCount * 0.6);
+data.forEach(item => {
+  const itemTime = new Date(item.time);
+  const minutesSince = (now - itemTime) / (1000 * 60);
 
-      const baseChartData = countsPer5Min.map((count, index) => {
-        const end = (index + 1) * 5;
-        return {
-          name: `~${end}分前`,
-          実績: count,
-          予測: 0
-        };
-      });
+  if (minutesSince >= 0 && minutesSince <= 30) {
+    const index = Math.floor(minutesSince / 5); // どの過去スロットか
+    predictedPast[index]++;
+  }
+});
 
-      baseChartData.unshift(
-        { name: '5分後予測', 実績: 0, 予測: predicted5 },
-        { name: '15分後予測', 実績: 0, 予測: predicted15 }
-      );
+// 過去データを元に、各未来スロットの人数を累積加算
+for (let i = 0; i < predictedFuture.length; i++) {
+  for (let j = i; j < predictedPast.length; j++) {
+    predictedFuture[i] += predictedPast[j];
+  }
+}
 
-      setChartData(baseChartData);
+
+
+
+const futureData = predictedFuture.map((count, index) => {
+  const start = (index + 1) * 5;
+  return {
+    name: `${start}分後予測`,
+    実績: 0,
+    予測: count,
+  };
+});
+
+setChartData([...futureData.reverse()]);
+
+
+
     } catch (error) {
       console.error('データ取得エラー:', error);
     } finally {
