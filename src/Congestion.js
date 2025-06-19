@@ -48,20 +48,36 @@ function Congestion() {
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(displayAreaName)}`);
+      const response = await fetch(`${API_ENDPOINT}/items?minutes=1&field=${encodeURIComponent(displayAreaName)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
+
+      console.log('取得データ:', data); // ← logの代わりに出力
+
       setCongestion(data.length.toString());
 
       const now = new Date();
       const positions = data.map((item) => {
         const itemTime = new Date(item.time);
-        const minutesAgo = (now - itemTime) / (1000 * 60);
+        const secondsAgo = (now - itemTime) / 1000;
 
         let opacity = 1;
-        if (minutesAgo > 45) opacity = 0.25;
-        else if (minutesAgo > 30) opacity = 0.5;
-        else if (minutesAgo > 15) opacity = 0.75;
+
+        if (secondsAgo > 60) {
+          opacity = 0.1; // 60秒以上前はほぼ見えない
+        } else if (secondsAgo > 50) {
+          opacity = 0.2;
+        } else if (secondsAgo > 40) {
+          opacity = 0.4;
+        } else if (secondsAgo > 30) {
+          opacity = 0.6;
+        } else if (secondsAgo > 20) {
+          opacity = 0.75;
+        } else if (secondsAgo > 10) {
+          opacity = 0.9;
+        } else {
+          opacity = 1;
+        }
 
         return {
           x: Math.random() * window.innerWidth,
