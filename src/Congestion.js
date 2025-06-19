@@ -1,40 +1,49 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import humanIcon from './img/human.png';
 
 import syokudoImg from './img/syokudo.jpeg';
 import daiyokujoImg from './img/daiyokujo.jpeg';
 import communitySpaceImg from './img/communitySpace.jpeg';
 
-function Congestion({ displayAreaName, onBack }) {
+function Congestion() {
+  const { area } = useParams(); // ← これでURLからareaを取得
+  const navigate = useNavigate();
+
+  // エリア名を日本語にマッピング
+  const areaMapReverse = {
+    syokudo: '食堂',
+    daiyokujo: '大浴場',
+    communitySpace: 'コミュニティスペース',
+  };
+  const displayAreaName = areaMapReverse[area] || area;
+
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [log, setLog] = useState('');
   const [iconPositions, setIconPositions] = useState([]);
+
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
   const WS_ENDPOINT = process.env.REACT_APP_WS_ENDPOINT;
 
-  // 背景画像の選択
   const backgroundImages = {
     '食堂': syokudoImg,
     '大浴場': daiyokujoImg,
-    'コミュニティスペース': communitySpaceImg
+    'コミュニティスペース': communitySpaceImg,
   };
   const backgroundImage = backgroundImages[displayAreaName] || syokudoImg;
 
-  // 混雑状況の取得
   const fetchCongestion = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(displayAreaName)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
-      const count = data.length;
-      setCongestion(count.toString());
+      setCongestion(data.length.toString());
       setLog(JSON.stringify(data));
 
       const now = new Date();
-
-      const positions = data.map(item => {
+      const positions = data.map((item) => {
         const itemTime = new Date(item.time);
         const minutesAgo = (now - itemTime) / (1000 * 60);
 
@@ -58,33 +67,18 @@ function Congestion({ displayAreaName, onBack }) {
     }
   }, [API_ENDPOINT, displayAreaName]);
 
-  // 初回読み込みとWebSocket設定
   useEffect(() => {
     fetchCongestion();
 
     const ws = new WebSocket(WS_ENDPOINT);
+    ws.onopen = () => console.log('WebSocket接続成功');
+    ws.onmessage = () => fetchCongestion();
+    ws.onclose = () => console.log('WebSocket切断');
+    ws.onerror = (err) => console.error('WebSocketエラー:', err);
 
-    ws.onopen = () => {
-      console.log('WebSocket接続成功');
-    };
-
-    ws.onmessage = (event) => {
-      console.log('WebSocket受信:', event.data);
-      fetchCongestion(); // 自動更新
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket切断');
-    };
-
-    ws.onerror = (err) => {
-      console.error('WebSocketエラー:', err);
-    };
-
-    return () => ws.close(); // クリーンアップ
+    return () => ws.close();
   }, [fetchCongestion, WS_ENDPOINT]);
 
-  // 「今行く」ボタンの処理
   const handleGoNow = async () => {
     try {
       const response = await fetch(`${API_ENDPOINT}/items`, {
@@ -115,7 +109,7 @@ function Congestion({ displayAreaName, onBack }) {
         textAlign: 'center',
       }}
     >
-      <button className="button-style" onClick={onBack}>← 戻る</button>
+      <button className="button-style" onClick={() => navigate(-1)}>← 戻る</button>
       <h1>{displayAreaName} の混雑状況</h1>
       {isLoading ? <p>読み込み中...</p> : (
         <>
@@ -144,6 +138,5 @@ function Congestion({ displayAreaName, onBack }) {
     </div>
   );
 }
-
 
 export default Congestion;

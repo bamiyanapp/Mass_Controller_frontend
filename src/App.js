@@ -10,7 +10,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/congestion/:areaName" element={<Congestion />} />
+          <Route path="/congestion/:area" element={<Congestion />} />
         </Routes>
       </div>
     </Router>
