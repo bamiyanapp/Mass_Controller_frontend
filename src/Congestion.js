@@ -13,6 +13,10 @@ import syokudoImg from './img/syokudo.jpg';
 import daiyokujoImg from './img/daiyokujo.jpg';
 import communitySpaceImg from './img/communitySpace.jpg';
 
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
+} from 'recharts';
+
 const humanIcons = [human1, human2, human3, human4, human5, human6, human7];
 
 function Congestion() {
@@ -29,6 +33,7 @@ function Congestion() {
   const [congestion, setCongestion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [iconPositions, setIconPositions] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
   const WS_ENDPOINT = process.env.REACT_APP_WS_ENDPOINT;
@@ -46,9 +51,6 @@ function Congestion() {
       const response = await fetch(`${API_ENDPOINT}/items?minutes=60&field=${encodeURIComponent(displayAreaName)}`);
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
-
-      console.log('取得データ:', data);
-
       setCongestion(data.length.toString());
 
       const now = new Date();
@@ -69,22 +71,57 @@ function Congestion() {
         };
       });
       setIconPositions(positions);
+
+      const countsPer5Min = new Array(12).fill(0);
+      data.forEach(item => {
+        const itemTime = new Date(item.time);
+        const minutesAgo = (now - itemTime) / (1000 * 60);
+        if (minutesAgo >= 0 && minutesAgo <= 60) {
+          const index = Math.floor(minutesAgo / 5);
+          countsPer5Min[index]++;
+        }
+      });
+
+      const goNowResponse = await fetch(`${API_ENDPOINT}/items?minutes=5&field=${encodeURIComponent(area)}`);
+      const goNowRaw = await goNowResponse.json();
+      const goNow = data.filter(item => {
+        const itemTime = new Date(item.time);
+        const minutesAgo = (now - itemTime) / (1000 * 60);
+        return minutesAgo <= 1;
+      });
+      const goNowCount = goNow.length;
+      const predicted5 = Math.round(goNowCount * 1.0);
+      const predicted15 = Math.round(goNowCount * 0.6);
+
+      const baseChartData = countsPer5Min.map((count, index) => {
+        const end = (index + 1) * 5;
+        return {
+          name: `~${end}分前`,
+          実績: count,
+          予測: 0
+        };
+      });
+
+      baseChartData.unshift(
+        { name: '5分後予測', 実績: 0, 予測: predicted5 },
+        { name: '15分後予測', 実績: 0, 予測: predicted15 }
+      );
+
+      setChartData(baseChartData);
     } catch (error) {
       console.error('データ取得エラー:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [API_ENDPOINT, displayAreaName]);
+  }, [API_ENDPOINT, displayAreaName, area]);
 
   useEffect(() => {
     fetchCongestion();
-
     const ws = new WebSocket(WS_ENDPOINT);
     ws.onopen = () => console.log('WebSocket接続成功');
     ws.onmessage = () => fetchCongestion();
     ws.onclose = () => console.log('WebSocket切断');
     ws.onerror = (err) => console.error('WebSocketエラー:', err);
-
     return () => ws.close();
   }, [fetchCongestion, WS_ENDPOINT]);
 
@@ -96,7 +133,6 @@ function Congestion() {
         body: JSON.stringify({ field: displayAreaName }),
       });
       if (response.ok) {
-        console.log('記録完了');
         fetchCongestion();
       } else {
         console.error(`記録失敗: ${response.status}`);
@@ -151,6 +187,17 @@ function Congestion() {
               className="human-icon-style"
             />
           ))}
+          <div style={{ position: 'absolute', bottom: 0, width: '100%', height: '200px', background: 'rgba(255,255,255,0.8)', padding: '10px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <XAxis dataKey="name" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Bar dataKey="実績" fill="#8884d8" />
+                <Bar dataKey="予測" fill="#82ca9d" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </>
       )}
     </div>
