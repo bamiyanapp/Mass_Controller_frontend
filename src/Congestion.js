@@ -65,52 +65,39 @@ function Congestion() {
       setIconPositions(positions);
 
     // 15分ごとの集計データを生成
-    const countsPer5Min = new Array(12).fill(0); // 0–60分を5分ごとに12区間
+   // 今後30分間のスロット（5分おき）ごとに、何人がその時間にまだ残っているかを計算
+const predictedFuture = new Array(6).fill(0); // 0–30分を5分刻みで6区間
 
-    data.forEach(item => {
-      const itemTime = new Date(item.time);
-      const minutesAgo = (now - itemTime) / (1000 * 60);
+data.forEach(item => {
+  const itemTime = new Date(item.time);
+  const minutesSince = (now - itemTime) / (1000 * 60);
 
-      if (minutesAgo >= 0 && minutesAgo <= 60) {
-        const index = Math.floor(minutesAgo / 5);
-        countsPer5Min[index]++;
+  for (let i = 0; i < predictedFuture.length; i++) {
+    const slotStart = i * 5;
+    const slotEnd = slotStart + 5;
+
+    // この時間帯にまだ滞在中か？
+    if (minutesSince >= 0 && minutesSince <= 30) {
+      const futureTime = minutesSince + slotStart;
+      if (futureTime <= 30) {
+        predictedFuture[i]++;
       }
-    });
+    }
+  }
+});
 
 
-    // 直近5分間の"今行く"データ取得
-      const goNowResponse = await fetch(`${API_ENDPOINT}/items?minutes=5&field=${encodeURIComponent(area)}`);
-      const goNowRaw = await goNowResponse.json();
-      const goNow = data.filter(item => {
-        const itemTime = new Date(item.time);
-        const minutesAgo = (now - itemTime) / (1000 * 60);
-        return minutesAgo <= 1;
-      });
-      
-      console.log('goNowRaw:', goNowRaw);
-      console.log('filtered goNow:', goNow);
 
+const futureData = predictedFuture.map((count, index) => {
+  const start = (index + 1) * 5;
+  return {
+    name: `${start}分後予測`,
+    実績: 0,
+    予測: count,
+  };
+});
 
-      const goNowCount = goNow.length;
-      const predicted5 = Math.round(goNowCount * 1.0);
-      const predicted15 = Math.round(goNowCount * 0.6);
-
-      const baseChartData = countsPer5Min.map((count, index) => {
-        const start = index * 5;
-        const end = start + 5;
-        return {
-          name: `~${end}分前`,
-          実績: count,
-          予測: 0
-        };
-      });
-
-      baseChartData.unshift(
-          { name: '5分後予測', 実績: 0, 予測: predicted5 },
-          { name: '15分後予測', 実績: 0, 予測: predicted15 }
-        );
-      
-      setChartData(baseChartData);
+setChartData([...futureData]);
 
 
     } catch (error) {
