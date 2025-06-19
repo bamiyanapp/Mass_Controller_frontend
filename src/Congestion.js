@@ -82,7 +82,7 @@ function Congestion() {
         }
       });
 
-      const goNowResponse = await fetch(`${API_ENDPOINT}/items?minutes=5&field=${encodeURIComponent(area)}`);
+  
       
       const goNow = data.filter(item => {
         const itemTime = new Date(item.time);
