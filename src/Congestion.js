@@ -101,7 +101,8 @@ const futureData = predictedFuture.map((count, index) => {
   };
 });
 
-setChartData([...futureData]);
+setChartData([...futureData.reverse()]);
+
 
 
     } catch (error) {
