@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import Congestion from './Congestion';
 import './App.css';
 
 function App() {
-  const [area, setArea] = useState(null);
-
   return (
-    <div className="App">
-      {area === null
-        ? <Home onSelect={setArea} />
-        : <Congestion area={area} onBack={() => setArea(null)} />
-      }
-    </div>
+    <Router basename="/Mass_Controller_frontend">
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/congestion/:area" element={<Congestion />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
