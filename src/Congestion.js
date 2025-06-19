@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import humanIcon from './img/human.png';
+
+import human1 from './img/human1.png';
+import human2 from './img/human2.png';
+import human3 from './img/human3.png';
+import human4 from './img/human4.png';
+import human5 from './img/human5.png';
+import human6 from './img/human6.png';
+import human7 from './img/human7.png';
 
 import syokudoImg from './img/syokudo.jpg';
 import daiyokujoImg from './img/daiyokujo.jpg';
-import communitySpaceImg from './img/communitySpace.jpeg';
+import communitySpaceImg from './img/communitySpace.jpg';
+
+const humanIcons = [human1, human2, human3, human4, human5, human6, human7];
 
 function Congestion() {
   const { area } = useParams();
@@ -38,7 +47,7 @@ function Congestion() {
       if (!response.ok) throw new Error(`status: ${response.status}`);
       const data = await response.json();
 
-      console.log('取得データ:', data); // ← logの代わりに出力
+      console.log('取得データ:', data);
 
       setCongestion(data.length.toString());
 
@@ -56,6 +65,7 @@ function Congestion() {
           x: Math.random() * window.innerWidth,
           y: Math.random() * window.innerHeight,
           opacity,
+          icon: humanIcons[Math.floor(Math.random() * humanIcons.length)],
         };
       });
       setIconPositions(positions);
@@ -108,21 +118,26 @@ function Congestion() {
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
+        margin: 0,
+        padding: 0,
       }}
     >
-      <div className="button-group">
+      <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 2 }}>
         <button className="button-style" onClick={() => navigate(-1)}>← 戻る</button>
         <button className="button-style" onClick={handleGoNow}>今行く</button>
       </div>
 
-      <h1>{displayAreaName} の混雑状況</h1>
-      {isLoading ? <p>読み込み中...</p> : (
+      <h1 style={{ marginTop: '80px', color: 'white', textShadow: '0 0 10px black' }}>
+        {displayAreaName} の混雑状況
+      </h1>
+
+      {isLoading ? <p style={{ color: 'white' }}>読み込み中...</p> : (
         <>
-          <p>混雑具合: {congestion}</p>
+          <p style={{ color: 'white', fontWeight: 'bold' }}>混雑具合: {congestion}</p>
           {iconPositions.map((pos, i) => (
             <img
               key={i}
-              src={humanIcon}
+              src={pos.icon}
               alt="icon"
               style={{
                 position: 'absolute',
