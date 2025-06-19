@@ -46,6 +46,15 @@
 
 `eject` を使用する必要はありません。厳選された機能セットは、小規模および中規模のデプロイに適しており、この機能を使用する必要があると感じるべきではありません。ただし、準備ができたときにカスタマイズできない場合は、このツールが役に立たないことを理解しています。
 
+## esLint
+
+* GitHub ActionsのesLintによるチェックで失敗することが多い
+* ローカルで事前にESLintを実行してエラーを防ぐ手順は以下の通り
+
+`npm install eslint --save-dev`
+
+`npx eslint . --ext .js,.jsx,.ts,.tsx`
+
 ## さらに詳しく
 
 [Create React App ドキュメント](https://facebook.github.io/create-react-app/docs/getting-started) で詳細を確認できます。
