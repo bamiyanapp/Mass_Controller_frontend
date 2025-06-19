@@ -83,7 +83,7 @@ function Congestion() {
       });
 
       const goNowResponse = await fetch(`${API_ENDPOINT}/items?minutes=5&field=${encodeURIComponent(area)}`);
-      const goNowRaw = await goNowResponse.json();
+      
       const goNow = data.filter(item => {
         const itemTime = new Date(item.time);
         const minutesAgo = (now - itemTime) / (1000 * 60);
