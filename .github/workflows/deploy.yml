@@ -19,7 +19,7 @@ jobs:
           echo "API_ENDPOINT: $REACT_APP_API_ENDPOINT"
 
       - name: 🧭 Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: 🛠 Setup Node.js
         uses: actions/setup-node@v3
